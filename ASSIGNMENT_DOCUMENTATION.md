@@ -31,16 +31,16 @@
 
 Document your development process with **minimum 3 entries** showing progression:
 
-### Entry 1 - [Date, Time]
-**What I implemented**: 
+### Entry 1 - [29 April, 9:00 PM]
+**What I implemented**: I added a `ReentrantLock` to protect shared counters (`contextSwitchCount`, `completedProcessCount`, `totalWaitingTime`). I used lock with try-finally in each method.
 
-**Challenges encountered**: 
+**Challenges encountered**: At first, I was not sure where to put the lock and how to use it correctly
 
-**How I solved it**: 
+**How I solved it**: I used one lock inside the `SharedResources` class and wrapped each critical section with `lock.lock()` and `lock.unlock()` using try-finally.
 
-**Testing approach**: 
+**Testing approach**: I ran the program multiple times and checked that the counters always give correct values.
 
-**Time spent**: 
+**Time spent**: 40 Minutes
 
 ---
 
