@@ -1,8 +1,8 @@
 # Assignment 3 - Complete Documentation
 
-**Student Name**: [Your Full Name]  
-**Student ID**: [Your ID]  
-**Date Submitted**: [Submission Date]
+**Student Name**: [Abdulrahman Ramadan Alfalah]  
+**Student ID**: [445052834]  
+**Date Submitted**: [2nd May 2026]
 
 ---
 
@@ -14,7 +14,7 @@
 > Set sharing to "Anyone with the link can view".
 > Test the link in incognito/private mode before submitting.
 
-**Video Link**: [Paste your personal Gmail Google Drive link here]
+**Video Link**: [https://drive.google.com/file/d/1xD13QkO_PtwzylI6lVAWNq7q5YArGdXa/view?usp=drive_link]
 
 **Video filename**: `[YourStudentID]_Assignment3_Synchronization.mp4`
 
@@ -84,15 +84,15 @@ Document your development process with **minimum 3 entries** showing progression
 ---
 
 ### Entry 5 - [Date, Time]
-**What I implemented**: 
+**What I implemented**: I completed the remaining parts of the documentation including Part 4 (Testing), Part 5 (Reflection), and Part 6 (GitHub repository information). I also recorded and uploaded the required video demonstration to Google Drive.
 
-**Challenges encountered**: 
+**Challenges encountered**: Making sure the video meets all the requirements took some time.
 
-**How I solved it**: 
+**How I solved it**: Recorded the video multiple times to meet the needed requirements.
 
-**Testing approach**: 
+**Testing approach**: -
 
-**Time spent**: 
+**Time spent**: 1 Hour
 
 ---
 
@@ -229,26 +229,27 @@ try{
 **Testing procedure**: 
 ```bash
 # Commands used (run the program at least 5 times)
+Clicked on Run Main button 5 times.
 ```
 
 **Results**: 
-(Show that running multiple times produces consistent, correct results)
+In every run, the results were the same: 10 completed processes, 17 context switches, and 34 log entries
 
 **Why synchronization is necessary**: 
-(Explain what race conditions COULD occur without synchronization, even if you didn't observe them. Explain which shared resources need protection and why.)
+Synchronization is necessary because without it, race conditions could occur on the shared variables like counters (contextSwitchCounter) and the excutionLog(ArrayList), leading to incorrect results.
 
-**Conclusion**: 
+**Conclusion**: The use of locks and semaphores makes the program's output stable across multiple executions.
 
 ---
 
 ### Test 2: Exception Testing
 **What I tested**: Checking for ConcurrentModificationException
 
-**Testing procedure**: 
+**Testing procedure**: I watched the program while multiple process threads were adding to the `ArrayList` used for the execution log
 
-**Results**: 
+**Results**: The program completed all 10 processes without any exceptions.
 
-**What this proves**: 
+**What this proves**: This proves that the `ReentrantLock` effectively manages access to the `ArrayList`.
 
 ---
 
@@ -256,21 +257,31 @@ try{
 **What I tested**: Verifying correct final values (total burst time, context switches, etc.)
 
 **Expected values**: 
+- Completed Processes: 10
+
+- Context Switches: 17 (based on burst times and quantum).  
+
+- Log Entries: 34 (Each context switch creates 2 entries: start and end).
 
 **Actual values**: 
+- Completed Processes: 10
 
-**Analysis**: 
+- Context Switches: 17   
+
+- Log Entries: 34
+
+**Analysis**: The actual values match the expected values perfectly. This confirms that synchronization was implemented correctly
 
 ---
 
 ### Test 4: Different Scenarios
-**Scenario tested**: [e.g., different time quantum, more processes, etc.]
+**Scenario tested**: Changing the Time Quantum from 4000ms to 2000ms.
 
-**Purpose**: 
+**Purpose**: To test the synchronization under more context switches.
 
-**Results**: 
+**Results**: The number of context switches increased, but the program remained stable
 
-**What I learned**: 
+**What I learned**: The locks and semaphores continue to protect the shared data correctly even with larger number of prcoess and context swtiches if the synchronization logic is correct
 
 ---
 
@@ -278,7 +289,7 @@ try{
 
 ### What I learned about synchronization:
 
-[6-8 sentences about key concepts, challenges, insights]
+Synchronization helps multiple threads use shared data safely without causing errors. I learned that without a lock, a race condition happens and important data is lost. I used a ReentrantLock to protect my counters and the execution log in my code. I also used a Semaphore to act like a CPU with only one permit for processes.
 
 ---
 
@@ -286,44 +297,44 @@ try{
 
 Give TWO examples where synchronization is critical:
 
-**Example 1**: 
+**Example 1**: Banking: Synchronization prevents two people from withdrawing the same money from an account at the same time. This keeps the bank balance correct.
 
-**Example 2**: 
+**Example 2**: Booking Seats. It makes sure two people cannot buy the same seat for a flight or a movie. It forces one person to finish before the next one starts.
 
 ---
 
 ### How I would explain synchronization to others:
 
-[Explain to someone who just finished Assignment 1 - use simple terms and analogies]
+Imagine a small bathroom with only one door and one lock. The lock is "synchronization." When one person goes inside, they lock the door so others must wait in line. If there was no lock, everyone would try to go in at once, and it would be a total mess. The bathroom here is the data and the lock is synchronization.
 
 ---
 
 ## Part 6: GitHub Repository Information
 
-**Repository URL**: 
+**Repository URL**: https://github.com/Abdulrahman-Alfalah-472/OS-Assignment3-Abdulrahman-Alfalah
 
-**Number of commits**: 
+**Number of commits**: 11
 
 **Commit messages**: 
-1. 
-2. 
-3. 
-4. 
+1. Set my student id: 445052834
+2. Implemented Task 1: Protected counter variables with locks
+3. Implemented Task 2: Protected Excution log with a lock
+4. Implemented Task 3: Contorlled CPU access using Semaphore
 
 ---
 
 ## Summary
 
-**Total time spent on assignment**: 
+**Total time spent on assignment**: 6 Hours
 
 **Key takeaways**: 
-1. 
-2. 
-3. 
+1. Synchronization is essential to prevent race conditions
+2. Semaphores can be used to control access to limited resources like CPU  
+3. Locks provide mutual exclusion for protecting shared data  
 
-**Most challenging aspect**: 
+    **Most challenging aspect**: The hardest part was knowing exactly where to use the locks and the semaphore without breaking the program. At first it was confusing how threads interact with shared data.
 
-**What I'm most proud of**: 
+    **What I'm most proud of**:  I’m most proud that the program runs correctly every time without errors and all the results are consistent after adding synchronization.
 
 ---
 
