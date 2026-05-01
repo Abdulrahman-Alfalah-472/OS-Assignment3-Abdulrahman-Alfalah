@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Random;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.ReentrantLock;
 // ANSI Color Codes for enhanced terminal output
 class Colors {
@@ -42,7 +43,7 @@ class SharedResources {
     
     // TODO #2: Add a Semaphore to limit concurrent process execution
     // Example: public static final Semaphore cpuSemaphore = new Semaphore(1);
-    
+    public static final Semaphore cpuSemaphore = new Semaphore(1);
     // Method to increment context switch counter
     public static void incrementContextSwitch() {
         // TODO: Protect this critical section with a lock
@@ -116,6 +117,8 @@ class Process implements Runnable {
     public void run() {
         // TODO #3: Acquire CPU semaphore before executing
         // This ensures only allowed number of processes run simultaneously
+        try{
+            SharedResources.cpuSemaphore.acquire();
         
         try {
             if (startTime == -1) {
@@ -179,7 +182,10 @@ class Process implements Runnable {
         } finally {
             // TODO #4: Release CPU semaphore here
             // Always release in finally block to prevent deadlocks!
+            SharedResources.cpuSemaphore.release();
         }
+    } catch (InterruptedException e) {
+        System.out.println(Colors.RED + "\n  ✗ " + name + " was interrupted while waiting for CPU." + Colors.RESET);}
     }
     
     private String createProgressBar(int progress, int width) {
