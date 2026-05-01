@@ -57,16 +57,16 @@ Document your development process with **minimum 3 entries** showing progression
 
 ---
 
-### Entry 3 - [Date, Time]
-**What I implemented**: 
+### Entry 3 - [1 May, 2:00 PM]
+**What I implemented**: I added a `Semaphore` with one permit to the SharedResources class, then I modified the `run()` method in the `Process` class to use `acquire()` before starting and `release()` after finishing the quantum.
 
-**Challenges encountered**: 
+**Challenges encountered**: I had to make sure the semaphore permit is released even if the process is interrupted so other processes can continue.
 
-**How I solved it**: 
+**How I solved it**: I put the `cpuSemaphore.release()` call inside the finally block.
 
-**Testing approach**: 
+**Testing approach**: I checked the terminal to see that only one process shows a progress bar at a time
 
-**Time spent**: 
+**Time spent**: 40 Minutes
 
 ---
 
