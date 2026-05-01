@@ -44,16 +44,16 @@ Document your development process with **minimum 3 entries** showing progression
 
 ---
 
-### Entry 2 - [Date, Time]
-**What I implemented**: 
+### Entry 2 - [30 April, 11:00 PM]
+**What I implemented**: I added a lock to protect the execution log. I used the same ReentrantLock and wrapped `executionLog.add()` with try-finally.
 
-**Challenges encountered**: 
+**Challenges encountered**: I was not sure if I should use a new lock or the same lock used for the counters.
 
-**How I solved it**: 
+**How I solved it**: I decided to use the same lock to keep the code simple.
 
-**Testing approach**: 
+**Testing approach**: I ran the program multiple times and checked that there are no errors.
 
-**Time spent**: 
+**Time spent**: 20 Mins
 
 ---
 
