@@ -70,16 +70,16 @@ Document your development process with **minimum 3 entries** showing progression
 
 ---
 
-### Entry 4 - [Date, Time]
-**What I implemented**: 
+### Entry 4 - [1 May, 11:00 PM]
+**What I implemented**: I completed the technical questions regarding race conditions and deadlocks, and the third part about synchronization analysis for the counters, the execution log, and the CPU semaphore.
 
-**Challenges encountered**: 
+**Challenges encountered**: Some new concepts were introduced like "Lock Granularity" so i had to understand it deeply
 
-**How I solved it**: 
+**How I solved it**: I used AI tools to understand the new concepts to be able to solve the tech questions.
 
-**Testing approach**: 
+**Testing approach**: -
 
-**Time spent**: 
+**Time spent**: 3 Hours
 
 ---
 
@@ -106,7 +106,8 @@ Document your development process with **minimum 3 entries** showing progression
 
 **Your Answer**:
 
-[Your answer here - 4-6 sentences with code examples]
+- In the original code, one race condition occurs with the `contextSwitchCount++` operation and the other counters incrementing operations. This is a shared variable, and the `++` operation is not atomic; it involves reading the value, incrementing it, and writing it back. If two threads perform this at once, one increment could be missing, leading to an incorrect total count.
+- A second race condition exists in the `executionLog.add(message)` method. Since ArrayList is not thread-safe, concurrent access can cause a `ConcurrentModificationException`, resulting in a log that is missing entriesx.
 
 ---
 
@@ -115,7 +116,7 @@ Document your development process with **minimum 3 entries** showing progression
 
 **Your Answer**:
 
-[Your answer here - explain your implementation choices]
+A Lock is binary, meaning it is either locked or unlocked. It is used for mutual exclusion to ensure only one thread enters critical section at a time. A Semaphore can allow N threads at once based on its permit count. In my code, I used a `ReentrantLock` for the shared counters and the log because only one process should change those data at a time. I used a `Semaphore(1)` for the CPU to limit the simulation so that only one process can execute its quantum at any single moment.
 
 ---
 
@@ -124,7 +125,7 @@ Document your development process with **minimum 3 entries** showing progression
 
 **Your Answer**:
 
-[Your answer here - reference try-finally blocks, lock ordering, etc.]
+A deadlock is a situation in which a set of processes are blocked because each process is holding a resource and waiting for another resource acquired by some other process, Two ways to prevent this are `try-finally` blocks and resource ordering. Resource ordering means that all processes must request resources in the exact same order. For example, if there are two resources, A and B, every process must take A first and then B. This prevents a circular wait where one process holds A and waits for B while another holds B and waits for A. In my code, I used `try-finally` blocks to prevent deadlocks. By putting the `unlock()` or `release()` call in the `finally` block, I ensured the resource is always freed even if an error occurs.
 
 ---
 
@@ -137,7 +138,7 @@ Document your development process with **minimum 3 entries** showing progression
 
 **Your Answer**:
 
-[Your answer here - explain coarse-grained vs fine-grained locking, independence of counters, concurrency implications. Show understanding of when to use each approach. 5-8 sentences expected.]
+For Task 1, I chose coarse-grained locking by using one lock for all three counters. I made this choice because it is simpler to implement and easier to manage. The trade-off is that it can be slower because threads must wait for the same lock even if they are updating different counters. While I used a single lock for simplicity, a fine-grained approach (using a different lock for each counter) would provide better concurrency. This is because fine-grained locking allows multiple threads to update independent counters at the same time without blocking each other.
 
 ---
 
@@ -145,52 +146,78 @@ Document your development process with **minimum 3 entries** showing progression
 
 ### Critical Section #1: Counter Variables
 
-**Which variables**: 
+**Which variables**: `contextSwitchCount`, `completedProcessCount`, and `totalWaitingTime`.
 
-**Why they need protection**: 
+**Why they need protection**: Because they are shared by all process threads. Without protection, two threads might try to update a counter at the same time, causing lost updates.
 
-**Synchronization mechanism used**: 
+**Synchronization mechanism used**: `ReentrantLock`
 
 **Code snippet**:
 ```java
 // Paste your implementation here
+// Same implementaion for the other variables
+public static void incrementContextSwitch() {
+        lock.lock();
+        try{
+            contextSwitchCount++;
+        } finally{
+            lock.unlock();
+        }
+    }
 ```
 
-**Justification**: 
+**Justification**: The lock ensures that only one thread can modify the counters at any moment. i used the `try-finally` block to make sure that the lock is released even if an error occurs.
 
 ---
 
 ### Critical Section #2: Execution Log
 
-**What resource**: 
+**What resource**: `executionLog`
 
-**Why it needs protection**: 
+**Why it needs protection**: `ArrayList` is not thread-safe. If multiple processes try to add messages to the log at the same time, the updates could be wrong.
 
-**Synchronization mechanism used**: 
+**Synchronization mechanism used**: `ReentrantLock`
 
 **Code snippet**:
 ```java
 // Paste your implementation here
+public static void logExecution(String message) {
+        lock.lock();
+        try{
+            executionLog.add(message);
+        } finally{
+            lock.unlock();
+        }
+    }
 ```
 
-**Justification**: 
+**Justification**: Using a lock around the `add()` method ensures that the execution history is recorded in the correct order and prevents missing updates.
 
 ---
 
 ### Critical Section #3: CPU Semaphore
 
-**Purpose of semaphore**: 
+**Purpose of semaphore**: To act as the CPU and manage which process is currently executing.
 
-**Number of permits and why**: 
+**Number of permits and why**: 1 permit. This ensures that only one process can use the CPU at a time.
 
-**Where implemented**: 
+**Where implemented**: Inside the `run()` method of the `Process` class.
 
 **Code snippet**:
 ```java
 // Paste your implementation here
+try{
+    SharedResources.cpuSemaphore.acquire();
+    // The rest of the code...
+    }finally {
+            
+            SharedResources.cpuSemaphore.release();
+        }
+     catch (InterruptedException e) {
+        System.out.println(Colors.RED + "\n  ✗ " + name + " was interrupted while waiting for CPU." + Colors.RESET);}
 ```
 
-**Effect on program behavior**: 
+**Effect on program behavior**: : It prevents multiple processes from printing their progress bars at the same time.
 
 ---
 
